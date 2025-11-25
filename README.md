@@ -1,150 +1,196 @@
 # Vibe Coding Training Sample Creator
 
-This repository is a scaffold for generating **Vibe Coding** training samples using declarative AI agents. Instead of traditional source code, the core "logic" lives in **agent definitions, prompts, and instructions** that guide an AI agent to generate educational coding tasks at different complexity levels.
+This repository generates **Vibe Coding** training samples using declarative AI agents. The core "logic" lives in **agent definitions, prompts, and instructions** that guide an AI agent to generate prompt engineering examples at different complexity levels.
 
 ## Repository Purpose
 
 The goal of this repo is to:
 
-- Provide a **standard structure** for Vibe Coding training projects.
-- Organize examples by **project** (e.g. `password-generator`) and by **difficulty level** (basic, intermediate, advanced).
-- Make it easy to plug these prompts and instructions into an agent runner (such as GitHub Copilot agents) to automatically generate or regenerate training material.
+- **Generate prompt samples** for Vibe Coding training projects.
+- Organize outputs by **project** (e.g. `password-generator`) and by **difficulty level** (basic, intermediate, advanced).
+- Produce ready-to-use prompt files that can be **copied into training projects**.
 
-## Project Structure
-
-At a high level:
+## Folder Structure
 
 ```text
-output/
-  {project-name}/
+output/                      # Generated prompt samples (ignored by git)
+  {project-name}/            # e.g. password-generator
     level-1-basic/
-      README.md              # Level overview & learning goals
-      prompts/               # Level-specific reusable prompts
-        *.prompt.md
+      README.md
+      .github/
+        prompts/
+          *.prompt.md
     level-2-intermediate/
       README.md
-      # Optional: instructions and prompts for more complex flows
+      .github/
+        prompts/
+        instructions/
+      copilot-instructions.md
     level-3-advanced/
-      # Advanced, multi-step, tool-using agent flows
+      README.md
+      .github/
+        agents/
+        prompts/
+        instructions/
+      copilot-instructions.md
 
-.github/
-  copilot-instructions.md    # Global instructions for agents working in this repo
-  # (Optional) .github/agents/*.agent.md and .github/prompts/*.prompt.md
+samples/                     # Reference example (checked into git)
+  password-generator/        # Shows expected output structure
+    level-1-basic/
+    level-2-intermediate/
+    level-3-advanced/
 ```
 
-In your current workspace, there is a single sample project:
+### Folders Explained
+
+| Folder | Purpose | Git Status |
+|--------|---------|------------|
+| `output/` | Generated prompt samples for your training projects. Copy contents to your target project. | **Ignored** (`.gitignore`) |
+| `samples/` | Reference example showing expected output structure. | **Tracked** |
+
+## Complexity Levels
+
+Each project follows a three-level difficulty model:
+
+### Level 1 – Basic
+
+- One-shot prompts.
+- Simple tasks, often single-file outputs.
+- Great for introducing a concept (e.g. a basic password generator).
+
+### Level 2 – Intermediate
+
+- Few-shot prompting with explicit instructions.
+- Focus on **predictability** through domain-specific instructions (CSS, JavaScript, accessibility, etc.).
+- Separate instruction files for repeatable patterns.
+
+### Level 3 – Advanced
+
+- Chain-of-thought prompting with dynamic planning.
+- Multi-agent orchestration using sub-agents.
+- Tool usage, task handover, and complex workflows.
+
+## Available Commands
+
+This repo provides two main prompts to interact with the Sampler agent:
+
+| Command | Description | Usage |
+|---------|-------------|-------|
+| `/initialize` | Create new training samples for a project | `/initialize password-generator web app` |
+| `/update` | Update existing samples with latest best practices | `/update password-generator` |
+
+## Workflow
+
+### Step 1: Initialize a New Project
+
+Use the `/initialize` prompt to create training samples for a new project:
+
+1. Open VS Code in this repository
+2. Open GitHub Copilot Chat
+3. Type: `/initialize <project-description>`
+
+**Example:**
+
+```text
+/initialize create a password generator web app with HTML, CSS, and JavaScript
+```
+
+The agent will:
+
+1. Generate a short project name (e.g., `password-generator`)
+2. Ask clarifying questions about requirements
+3. Research best practices for prompt engineering
+4. Create the folder structure in `output/{project-name}/`
+
+### Step 2: Review Generated Samples
+
+After generation, review the output:
 
 ```text
 output/
   password-generator/
     level-1-basic/
       README.md
-      prompts/
-        password-generator-better.prompt.md
-        password-generator-simple.prompt copy.md
+      .github/prompts/password-generator.prompt.md
     level-2-intermediate/
       README.md
+      .github/prompts/...
+      .github/instructions/...
       copilot-instructions.md
     level-3-advanced/
-      # (empty for now)
+      README.md
+      .github/agents/...
+      .github/prompts/...
+      .github/instructions/...
+      copilot-instructions.md
 ```
 
-### Levels Explained
+### Step 3: Update Existing Samples
 
-Each `{project-name}` follows a three-level difficulty model:\r
+Use the `/update` prompt to refresh existing samples:
 
-1. **Level 1 – Basic**
-   - One-shot prompts.
-   - Simple tasks, often single-file outputs.
-   - Great for introducing a concept (e.g. a basic password generator).
+```text
+/update password-generator
+```
 
-2. **Level 2 – Intermediate**
-   - Few-shot prompting and/or explicit requirement breakdown.
-   - May involve separate instruction files and multiple steps.
-   - Encourages more structure and partial planning.
+The agent will review and update prompts to align with current best practices.
 
-3. **Level 3 – Advanced**
-   - Chain-of-thought style prompting.
-   - Dynamic planning, tool usage, and sometimes sub-agents.
-   - Best suited for complex, multi-file, or multi-phase coding exercises.
+### Step 4: Copy to Training Project
 
-## How to Use This Repository
+Copy the generated content to your target training project:
 
-### 1. Exploring Existing Samples
+```powershell
+# Copy a specific level to your training project
+Copy-Item -Recurse output/password-generator/level-1-basic/.github/* C:\path\to\training-project\.github\
+```
 
-To understand how a project is organized, start with its level README files, for example:
+## Agent Architecture
 
-- `output/password-generator/level-1-basic/README.md`
-- `output/password-generator/level-2-intermediate/README.md`
+```text
+.github/
+  agents/
+    sampler.agent.md     # Main agent that generates training samples
+  prompts/
+    initialize.prompt.md # Creates new project samples
+    update.prompt.md     # Updates existing samples
+  copilot-instructions.md # Global context for this repo
+```
 
-Then open the prompts under `prompts/` to see how the training tasks are phrased for an agent.
+### Sampler Agent (`sampler.agent.md`)
 
-### 2. Creating a New Training Project
+The core agent that:
 
-To add a new project (for example, `todo-app`):
+- Researches prompt engineering best practices
+- Asks clarifying questions about project requirements
+- Generates structured prompt samples across all three complexity levels
+- Creates proper folder structure aligned with GitHub Copilot conventions
 
-1. Create the directory structure:
+### Prompts
 
-   ```text
-   output/
-     todo-app/
-       level-1-basic/
-         README.md
-         prompts/
-       level-2-intermediate/
-         README.md
-       level-3-advanced/
-         README.md (optional, can be added later)
-   ```
+| Prompt | Purpose |
+|--------|---------|
+| `initialize.prompt.md` | Entry point for creating new training samples |
+| `update.prompt.md` | Entry point for updating existing samples |
 
-2. For each level:
-   - Write a `README.md` describing the learning goals and the kind of code the learner should produce.
-   - For Level 1, create one or more `*.prompt.md` files in `prompts/` that describe a simple, focused task.
-   - For Levels 2 and 3, you can:
-     - Add richer instructions under `.github/instructions/` for that project/level.
-     - Reference or add `.github/prompts/*.prompt.md` for reusable prompt patterns.
+## File Naming Conventions
 
-3. (Optional) Define agents under `.github/agents/*.agent.md` if you want custom agent personas or tools.
+| Type | Location | Pattern |
+|------|----------|---------|
+| Prompts | `.github/prompts/` | `*.prompt.md` |
+| Instructions | `.github/instructions/` | `*.instructions.md` |
+| Agents | `.github/agents/` | `*.agent.md` |
+| Global Config | Root or `.github/` | `copilot-instructions.md` |
 
-### 3. Example Usage with an Agent Runner
+## Reference Samples
 
-How you *run* these prompts depends on your agent framework, but a typical workflow looks like this:
+Check the `samples/` folder for example output structure:
 
-1. Configure your agent (e.g. GitHub Copilot agent, CLI agent runner, or a custom script) to:
-   - Use `.github/copilot-instructions.md` as system-level context.
-   - Load a level README as high-level task description.
-   - Feed one of the `*.prompt.md` files as the user prompt.
+- `samples/password-generator/level-1-basic/` – One-shot prompt example
+- `samples/password-generator/level-2-intermediate/` – Instructions + few-shot prompts
+- `samples/password-generator/level-3-advanced/` – Multi-agent orchestration
 
-2. Ask the agent to generate the target artifact. For example:
-   - For `password-generator` level 1 basic, the agent might generate a single `password-generator.js` (or equivalent) file.
-   - For intermediate or advanced levels, the agent may generate multiple files or a more structured implementation.
-
-3. Iterate on the prompts or instructions as needed to refine the training sample quality.
-
-> Note: This repository intentionally does **not** prescribe a specific execution engine. It is compatible with any system that can:
-> - Read Markdown prompts and instructions, and
-> - Use them as context for an AI coding assistant or agent.
-
-## Local Development
-
-Although this repo is mostly Markdown, you can still follow typical development hygiene:
+## Contributing
 
 - Use branches and pull requests when editing or adding training projects.
 - Keep prompts and instructions **small, focused, and well-commented**.
-- When adding a new project, make sure each level has a clear README and, if applicable, example prompts.
-
-## Git & GitHub
-
-This repository is intended to be version-controlled and shared publicly so others can:
-
-- Review and iterate on training material.
-- Reuse, fork, and adapt the sample structures.
-- Contribute new projects and levels via pull requests.
-
-The next sections of your workflow should:
-
-1. Initialize a local git repository in this folder.
-2. Create an initial commit containing the existing structure and this README.
-3. Push it to a new public repository in your GitHub account.
-
-If you would like, I can walk you through those git/GitHub steps interactively or help you tweak this README further.
+- Update `samples/` with representative examples when adding new project types.
