@@ -12,10 +12,16 @@ you follow a framework of levels to ensure comprehensive coverage of the topic:
 **level 1:** **Basic** - Simple examples that introduce fundamental concepts. you generate a simple One Shot prompt for an agent that performs a straightforward task, ie: create a password generator web app with html, css and javascript.
 **level 2:** **Intermediate** - More complex examples that build on basic concepts. Use instructions and few-shot prompting to instruct an agent in peforming the same task as level 1 but with added complexity and predictability. you will create multiple `instructions`, `prompt` files insede the .github/prompts|instructions/ folder to illustrate the prompting technique. in this level you will incorporate also a more defined requirement analysis and planning phase before the implementation.
 **level 3:** **Advanced** - Sophisticated examples that showcase advanced techniques. Implement chains of thought, tool usage, and dynamic planning to create an agent that can handle complex scenarios related to the same task as level 1 and 2. the generated prompt samples should demonstrate advanced prompting strategies, including tool integration and dynamic decision-making, planning and task completion, subagent and hand over.
-
-
+in this level you will create multiple agents that collaborate to perform the task, each with its own specialized role, example: 
+        agents/
+          planner.agent.md
+          coordinator.agent.md
+          implementer.agent.md
+          tester.agent.md
+you can use the #runSubagent tool to create subagents as needed. the goal is to orchestrate multiple agents and hand over to work together effectively.
 
 **You only generate the prompt samples, not the code: you will create prompt samples for three levels of complexity: Basic, Intermediate, and Advanced.**
+**do not wrtite in any prompt file that the prompt goal is for training, ONLY WRITE THE PROMPT FOR THE PROJECT**
 
 use the #runSubagent tool researching prompt engineering best practices for github copilot and the usage in vscode AI agents. Based on your research,
 you will prepare the files for each level of complexity, ensuring that each prompt sample is well-documented and easy to understand.
@@ -37,12 +43,12 @@ You will Ask questions to clarify the requirements for each code sample:
 3. Generate Samples: Based on the clarified requirements, create an `output/{{project-name}}` folder with subfolders for each complexity level. Populate these folders with well-structured prompt samples that illustrate the requested techniques and best practices. the folders should always align with the github copilot folder structure for prompts in vscode: `.github/prompts/`, `.github/instructions/` and file naming conventions. examples: for a `password-generator` project, the following output could be generated: 
 ```
 ./output/
-  password-generator/
+  {{project-name}}/
     level-1-basic/
       README.md
       .github/
         prompts/
-          password-generator.prompt.md
+          {{short-name}}.prompt.md
     level-2-intermediate/
       README.md
       .github/
@@ -57,6 +63,10 @@ You will Ask questions to clarify the requirements for each code sample:
     level-3-advanced/
       README.md
       .github/
+        agents/
+          planner.agent.md
+          implementer.agent.md
+          tester.agent.md
         prompts/
           dynamic-planning.prompts.md
           tool-usage.prompts.md
@@ -66,3 +76,7 @@ You will Ask questions to clarify the requirements for each code sample:
           tool-integration.instructions.md
         copilot-instructions.md
 ```
+
+## Apply Changes
+If the folder structure for {{project-name}} already exists, review the existing prompt samples and update them to align with the latest best practices and user requirements. Ensure that all changes are well-documented and maintain consistency across all levels of complexity.
+Ask any clarifying questions before proceeding with the generation or update of prompt samples.
