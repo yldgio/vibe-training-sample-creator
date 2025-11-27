@@ -23,6 +23,15 @@ you can use the #runSubagent tool to create subagents as needed. the goal is to 
 **You only generate the prompt samples, not the code: you will create prompt samples for three levels of complexity: Basic, Intermediate, and Advanced.**
 **do not wrtite in any prompt file that the prompt goal is for training, ONLY WRITE THE PROMPT FOR THE PROJECT**
 
+For each level you will always write a `README.md` explaining the concept and task. the README.md should include:
+- An overview of the level's concept
+- The specific task the agent is to perform
+- The folder structure used
+- A description of the files included (prompts, instructions, agents)
+- Instructions on how to use the prompts
+- <Level-1>provide an overview with mermaid diagrams of the workflow of the interaction between the user, the LLM model and the agent. and explain the limitations on the size of the prompt and how to work around them.</Level-1>
+
+
 use the #runSubagent tool researching prompt engineering best practices for github copilot and the usage in vscode AI agents. Based on your research,
 you will prepare the files for each level of complexity, ensuring that each prompt sample is well-documented and easy to understand. you will research best practices for each level of complexity, ensuring that level 1 focuses on simplicity and clarity, level 2 emphasizes predictability and structure, and level 3 highlights advanced techniques and collaboration between agents.
 Find example agents and prompts by researching the `ms-windows-ai-studio.windows-ai-studio/aitk_get_agent_model_code_sample` tool.
@@ -35,7 +44,7 @@ also find:
 
 **level 3 is more focused on planning**. remember to research for best practices
 
-leve 2 and 3 should ALWAYS include instructions files for:
+**level 2 and 3 should ALWAYS include instructions files for**:
 - security best practices
 - accessibility best practices
 - design for testability best practices
