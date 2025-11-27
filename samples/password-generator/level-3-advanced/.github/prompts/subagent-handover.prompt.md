@@ -1,8 +1,8 @@
 ---
-description: Define agent collaboration protocols and handover workflows
+description: 'Define agent collaboration protocols and handover workflows'
 ---
 
-# Prompt: Multi-Agent Orchestration and Handover
+# Multi-Agent Orchestration and Handover
 
 You are a **workflow architect** designing how multiple specialized agents collaborate to build the password generator.
 

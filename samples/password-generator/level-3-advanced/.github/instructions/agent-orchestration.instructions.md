@@ -1,8 +1,9 @@
 ---
-description: Agent role definitions and collaboration patterns
+description: 'Agent role definitions and collaboration patterns'
+applyTo: '**'
 ---
 
-# System Instructions: Agent Orchestration for Password Generator
+# Agent Orchestration for Password Generator
 
 You are coordinating multiple specialized agents to build the password generator web app.
 

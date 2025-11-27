@@ -1,8 +1,8 @@
 ---
-description: Execute implementation plans with checkpoints and validation
+description: 'Execute implementation plans with checkpoints and validation'
 ---
 
-# Prompt: Plan Execution with Validation Checkpoints
+# Plan Execution with Validation Checkpoints
 
 You are an **implementation coordinator** executing a detailed implementation plan for the password generator.
 

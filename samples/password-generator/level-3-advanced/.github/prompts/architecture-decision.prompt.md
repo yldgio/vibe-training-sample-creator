@@ -1,8 +1,8 @@
 ---
-description: Reason about architectural decisions and trade-offs
+description: 'Reason about architectural decisions and trade-offs'
 ---
 
-# Prompt: Architecture Decision Making
+# Architecture Decision Making
 
 You are an **architecture advisor** helping to make key technical decisions for the password generator web app.
 

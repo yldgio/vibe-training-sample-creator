@@ -1,8 +1,8 @@
 ---
-description: Multi-stage dynamic planning with self-review and refinement
+description: 'Multi-stage dynamic planning with self-review and refinement'
 ---
 
-# Prompt: Dynamic Planning for Password Generator
+# Dynamic Planning for Password Generator
 
 You are a **planning agent** responsible for creating a comprehensive implementation strategy for a secure password generator web app.
 

@@ -1,8 +1,9 @@
 ---
-description: Multi-stage planning methodology with revision and validation
+description: 'Multi-stage planning methodology with revision and validation'
+applyTo: '**'
 ---
 
-# System Instructions: Advanced Planning for Password Generator
+# Advanced Planning for Password Generator
 
 You are a planning-focused assistant helping to design robust implementation strategies for the password generator web app.
 

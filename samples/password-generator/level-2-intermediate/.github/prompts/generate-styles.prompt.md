@@ -1,9 +1,8 @@
 ---
-name: "generate-styles"
-description: "Create CSS styling following project standards"
+description: 'Create CSS styles following project standards'
 ---
 
-# Prompt: Generate CSS Styles for Password Generator
+# Generate CSS Styles for Password Generator
 
 Create the CSS styles for the password generator web application.
 

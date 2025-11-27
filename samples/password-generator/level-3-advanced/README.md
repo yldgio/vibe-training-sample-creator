@@ -1,0 +1,104 @@
+# Level 3: Advanced - Multi-Agent Orchestration
+
+This level showcases advanced prompting patterns for building a coordinated **multi-agent** workflow that plans, implements, and validates a secure password generator web app.
+
+## Concept: Multi-Agent Collaboration
+
+Instead of a single agent doing all the work, we orchestrate multiple specialized agents:
+
+- **Planner Agent**: Strategy and architecture (WHAT and WHY)
+- **Implementer Agent**: Execution and coding (HOW)
+- **Tester Agent**: Validation and quality assurance (HOW WELL)
+- **Coordinator Agent**: Orchestration and handoffs
+
+## The Task
+
+Create a secure password generator web app using a structured, multi-agent workflow with planning, execution, and validation phases.
+
+## Folder Structure
+
+```text
+level-3-advanced/
+├── .github/
+│   ├── copilot-instructions.md           # Project overview
+│   ├── agents/                           # Specialized agents
+│   │   ├── coordinator.agent.md
+│   │   ├── implementer.agent.md
+│   │   ├── planner.agent.md
+│   │   └── tester.agent.md
+│   ├── instructions/                     # Domain instructions
+│   │   ├── advanced-planning.instructions.md
+│   │   ├── agent-orchestration.instructions.md
+│   │   ├── performance-best-practices.instructions.md
+│   │   └── security-best-practices.instructions.md
+│   └── prompts/                          # Task prompts
+│       ├── architecture-decision.prompt.md
+│       ├── dynamic-planning.prompt.md
+│       ├── plan-execution.prompt.md
+│       ├── review-feedback.prompt.md
+│       ├── risk-assessment.prompt.md
+│       └── subagent-handover.prompt.md
+└── README.md
+```
+
+## Agents
+
+### Planner Agent
+- Creates multi-stage implementation plans
+- Makes architectural decisions
+- Assesses risks and defines mitigations
+- Hands off to Implementer
+
+### Implementer Agent
+- Executes plans phase by phase
+- Follows domain instructions
+- Documents deviations
+- Hands off to Tester
+
+### Tester Agent
+- Reviews code against requirements
+- Validates security and accessibility
+- Provides structured feedback
+- Approves or requests revisions
+
+### Coordinator Agent
+- Maintains global project view
+- Manages handoffs between agents
+- Resolves conflicts
+- Drives project to completion
+
+## Workflow
+
+```text
+                    ┌─────────────┐
+                    │ Coordinator │
+                    └──────┬──────┘
+                           │
+              ┌────────────┼────────────┐
+              ▼            ▼            ▼
+        ┌─────────┐  ┌───────────┐  ┌────────┐
+        │ Planner │──│Implementer│──│ Tester │
+        └─────────┘  └───────────┘  └────────┘
+              │            ▲            │
+              │            │            │
+              └────────────┴────────────┘
+                    Feedback Loop
+```
+
+## Key Differences from Level 1 & 2
+
+| Aspect | Level 1 | Level 2 | Level 3 (This) |
+|--------|---------|---------|----------------|
+| Agents | Single | Single | Multiple |
+| Planning | Implicit | Minimal | Multi-stage |
+| Workflow | Linear | Sequential | Iterative |
+| Handoffs | None | None | Structured |
+| Best For | Prototypes | Production | Complex projects |
+
+## Learning Objectives
+
+- Understand agent definition with tools and handoffs
+- Learn multi-agent collaboration patterns
+- See how to structure planning with self-review
+- Practice risk assessment and mitigation
+- Implement structured feedback loops

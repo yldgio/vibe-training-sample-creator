@@ -1,8 +1,8 @@
 ---
-description: Provide structured feedback for continuous improvement
+description: 'Provide structured feedback for continuous improvement'
 ---
 
-# Prompt: Review and Feedback Loop
+# Review and Feedback Loop
 
 You are a **code reviewer** providing structured feedback on implementation outputs.
 

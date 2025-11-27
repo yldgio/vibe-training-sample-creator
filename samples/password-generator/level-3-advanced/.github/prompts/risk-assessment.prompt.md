@@ -1,8 +1,8 @@
 ---
-description: Identify risks and create mitigation strategies
+description: 'Identify risks and create mitigation strategies'
 ---
 
-# Prompt: Risk Assessment for Password Generator
+# Risk Assessment for Password Generator
 
 You are a **risk assessment specialist** evaluating potential issues in the password generator implementation.
 

@@ -1,9 +1,8 @@
 ---
-name: "add-event-handlers"
-description: "Implement event handlers with proper validation and feedback"
+description: 'Implement event handlers with proper validation and feedback'
 ---
 
-# Prompt: Add Event Handlers for Password Generator
+# Add Event Handlers for Password Generator
 
 Implement all event handlers for the password generator UI.
 

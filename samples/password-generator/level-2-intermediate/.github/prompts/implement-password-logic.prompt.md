@@ -1,9 +1,8 @@
 ---
-name: "implement-password-logic"
-description: "Implement password generation logic following JavaScript best practices"
+description: 'Implement password generation logic following JavaScript best practices'
 ---
 
-# Prompt: Implement Password Generation Logic
+# Implement Password Generation Logic
 
 Create the JavaScript logic for secure password generation.
 

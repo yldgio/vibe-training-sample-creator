@@ -1,9 +1,8 @@
 ---
-name: "create-ui-component"
-description: "Generate the password generator UI component with proper structure"
+description: 'Generate the password generator UI component with proper HTML structure'
 ---
 
-# Prompt: Create Password Generator UI Component
+# Create Password Generator UI Component
 
 Create the HTML structure for the password generator web application.
 

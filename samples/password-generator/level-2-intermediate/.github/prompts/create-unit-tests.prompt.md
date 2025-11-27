@@ -1,9 +1,8 @@
 ---
-name: "create-unit-tests"
-description: "Generate comprehensive unit tests for password generator"
+description: 'Generate comprehensive unit tests for password generator'
 ---
 
-# Prompt: Create Unit Tests for Password Generator
+# Create Unit Tests for Password Generator
 
 Generate a comprehensive test suite for the password generator application.
 
