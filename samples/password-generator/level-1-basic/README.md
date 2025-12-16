@@ -121,24 +121,25 @@ Each interaction adds to the conversation history, causing the context to grow:
 
 ```mermaid
 flowchart LR
-    subgraph Turn 1
-        A1[Prompt: 200 tokens]
-        B1[Response: 500 tokens]
+    subgraph Turn1["Turn 1"]
+        A1["Prompt: 200 tokens"]
+        B1["Response: 500 tokens"]
+        A1 --> B1 -->turn1_cost["700 tokens total"]
     end
-    
-    subgraph Turn 2
-        A2[History: 700 tokens]
-        B2[New Prompt: 150 tokens]
-        C2[Response: 600 tokens]
+
+    subgraph Turn2["Turn 2"]
+        A2["History: 700 tokens"]
+        B2["New Prompt: 150 tokens"]
+        C2["Response: 600 tokens"]
+        A2 -->B2 --> C2 -->turn2_cost["1.450 tokens total"]
     end
-    
-    subgraph Turn 3
-        A3[History: 1450 tokens]
-        B3[New Prompt: 100 tokens]
-        C3[Response: 800 tokens]
+    subgraph Turn3["Turn 3"]
+        A3["History: 1450 tokens"]
+        B3["New Prompt: 100 tokens"]
+        C3["Response: 800 tokens"]
+        A3 -->B3 --> C3 -->turn3_cost["2,350 tokens total"]
     end
-    
-    Turn 1 --> Turn 2 --> Turn 3
+    Turn1 ---> Turn2 ---> Turn3
 ```
 
 **Example: Context Growth Over 5 Iterations**
