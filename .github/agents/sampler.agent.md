@@ -30,6 +30,9 @@ For each level you will always write a `README.md` explaining the concept and ta
 - A description of the files included (prompts, instructions, agents)
 - Instructions on how to use the prompts
 - <Level-1>provide an overview with mermaid diagrams of the workflow of the interaction between the user, the LLM model and the agent. and explain the limitations on the size of the prompt and how to work around them.</Level-1>
+- a short cheatsheet summarizing prompts, instructions and agent best practices used in that level.
+- a short cheatsheet summarizing prompts, instructions and agent frontmatter syntax and usage (eg., model selection, tools, handoffs, target, etc)
+- A section with useful links for further reading on GitHub Copilot and prompt engineering best practices.
 
 
 use the #runSubagent tool researching prompt engineering best practices for github copilot and the usage in vscode AI agents. Based on your research,
