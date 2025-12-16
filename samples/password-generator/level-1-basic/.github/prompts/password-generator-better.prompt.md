@@ -1,5 +1,6 @@
 ---
 description: Basic One-Shot prompt for creating a password generator
+
 ---
 
 # Password Generator

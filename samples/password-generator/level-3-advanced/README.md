@@ -102,3 +102,42 @@ level-3-advanced/
 - See how to structure planning with self-review
 - Practice risk assessment and mitigation
 - Implement structured feedback loops
+
+## Link utili (Copilot + prompt files)
+
+- GitHub Copilot docs: https://docs.github.com/en/copilot
+- GitHub Copilot (repository custom instructions): https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot
+- VS Code Copilot Chat docs (prompt files / agent mode): https://code.visualstudio.com/docs/copilot/copilot-chat
+- Esempi community (prompts/instructions):
+      - https://github.com/github/awesome-copilot/tree/main/prompts
+      - https://github.com/github/awesome-copilot/tree/main/instructions
+
+### Mini-cheatsheet: frontmatter (YAML)
+
+**Prompt** (`.github/prompts/*.prompt.md`)
+
+```yaml
+---
+description: "Cosa fa questo prompt"
+mode: "agent" # oppure: "chat"
+tools: ["editFiles", "runInTerminal"] # opzionale
+---
+```
+
+**Instructions** (`.github/instructions/*.instructions.md`)
+
+```yaml
+---
+description: "Regole riusabili (brevi)"
+applyTo: "**/*.js"
+---
+```
+
+**Agent** (`.github/agents/*.agent.md`)
+
+```yaml
+---
+description: "Ruolo dell’agente"
+tools: ["codebase", "editFiles"]
+---
+```
