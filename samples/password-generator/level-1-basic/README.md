@@ -189,19 +189,16 @@ sequenceDiagram
 ### Why This Matters for One-Shot Prompting
 
 In Level 1 (one-shot), you typically:
-
 - Send **one prompt** → get **one response**
 - Minimal tool usage (just file creation)
 - Context stays relatively small
 
 **Advantages:**
-
 - ✅ Lower token usage
 - ✅ Faster responses
 - ✅ Less chance of context overflow
 
 **Trade-offs:**
-
 - ❌ No iterative refinement in same session
 - ❌ Must include all requirements upfront
 - ❌ Can't reference previous conversation
@@ -279,12 +276,12 @@ level-1-basic/
 
 ## Link utili (Copilot + prompt files)
 
-- GitHub Copilot docs: <https://docs.github.com/en/copilot>
-- GitHub Copilot (repository custom instructions): <https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot>
-- VS Code Copilot Chat docs (prompt files / agent mode): <https://code.visualstudio.com/docs/copilot/copilot-chat>
+- GitHub Copilot docs: https://docs.github.com/en/copilot
+- GitHub Copilot (repository custom instructions): https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot
+- VS Code Copilot Chat docs (prompt files / agent mode): https://code.visualstudio.com/docs/copilot/copilot-chat
 - Esempi community (prompts/instructions):
-  - <https://github.com/github/awesome-copilot/tree/main/prompts>
-  - <https://github.com/github/awesome-copilot/tree/main/instructions>
+    - https://github.com/github/awesome-copilot/tree/main/prompts
+    - https://github.com/github/awesome-copilot/tree/main/instructions
 
 ### Mini-cheatsheet: frontmatter (YAML)
 
@@ -315,3 +312,22 @@ description: "Ruolo dell’agente"
 tools: ["codebase", "editFiles"]
 ---
 ```
+
+
+## Nanoagent: Executable Python Example
+
+The `nanoagent/` folder contains a minimal Python implementation that demonstrates the same one-shot pattern in executable code.
+
+### What It Demonstrates
+- Single LLM call (prompt in → response out)
+- No tools, no memory, no orchestration
+- Provider-agnostic using litellm
+
+### Quick Start
+```bash
+cd nanoagent
+uv sync
+uv run agent.py --mock "Generate a secure password"
+```
+
+See `nanoagent/README.md` for full documentation.

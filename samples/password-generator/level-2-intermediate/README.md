@@ -182,3 +182,29 @@ license: MIT  # optional
 # Instructions
 Step-by-step instructions, examples, and guidelines.
 ```
+
+## Nanoagent: Executable Python Example
+
+The `nanoagent/` folder contains a Python implementation demonstrating tool calling and instruction loading.
+
+### What It Demonstrates
+- Tool definition with Pydantic schemas
+- Tool calling loop (agent decides when to use tools)
+- System instructions loaded from external file
+- Structured tool responses
+
+### Quick Start
+```bash
+cd nanoagent
+uv sync
+uv run agent.py --mock "Generate a secure password"
+```
+
+### Code Structure
+| File | Purpose |
+|------|---------|
+| `agent.py` | Main agent with tool calling loop |
+| `tools/password_tools.py` | Tool definitions with Pydantic schemas |
+| `instructions/system.md` | System instructions loaded at runtime |
+
+See `nanoagent/README.md` for full documentation.

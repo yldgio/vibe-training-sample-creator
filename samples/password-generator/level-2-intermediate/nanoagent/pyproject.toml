@@ -1,0 +1,14 @@
+[project]
+name = "nanoagent-intermediate"
+version = "0.1.0"
+description = "Level 2: Intermediate agent with tool calling and instruction loading"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "litellm>=1.0.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.scripts]
+agent = "agent:main"
