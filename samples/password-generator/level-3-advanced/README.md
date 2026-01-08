@@ -203,3 +203,32 @@ Step-by-step instructions, examples, and guidelines.
 ## Resources
 Include scripts, templates, or examples in the same folder.
 ```
+
+## Nanoagent: Executable Python Example
+
+The `nanoagent/` folder contains a multi-agent Python implementation demonstrating orchestration and handoffs.
+
+### What It Demonstrates
+- Multi-agent architecture (Planner, Implementer, Tester)
+- Structured agent handoffs with message passing
+- Shared context through the pipeline
+- Orchestrator pattern for workflow management
+
+### Quick Start
+```bash
+cd nanoagent
+uv sync
+uv run orchestrator.py --mock "Generate a secure password"
+```
+
+### Code Structure
+| File | Purpose |
+|------|---------|
+| `orchestrator.py` | Main coordinator managing the pipeline |
+| `agents/base.py` | BaseAgent class, AgentContext, AgentMessage |
+| `agents/planner.py` | Planning agent (analyzes requirements) |
+| `agents/implementer.py` | Implementation agent (generates password) |
+| `agents/tester.py` | Testing agent (validates results) |
+| `tools/shared_tools.py` | Tools shared across agents |
+
+See `nanoagent/README.md` for full documentation.
