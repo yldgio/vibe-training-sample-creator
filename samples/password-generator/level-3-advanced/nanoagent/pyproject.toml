@@ -1,0 +1,14 @@
+[project]
+name = "nanoagent-advanced"
+version = "0.1.0"
+description = "Level 3: Advanced multi-agent orchestration with handoffs"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "litellm>=1.0.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.scripts]
+orchestrator = "orchestrator:main"
