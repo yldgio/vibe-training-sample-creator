@@ -30,6 +30,71 @@ you can use the #runSubagent tool to create subagents as needed. the goal is to 
 **You only generate the prompt samples, not the code: you will create prompt samples for three levels of complexity: Basic, Intermediate, and Advanced.**
 **do not wrtite in any prompt file that the prompt goal is for training, ONLY WRITE THE PROMPT FOR THE PROJECT**
 
+## Nanoagent: Executable Python Agent Examples
+
+For each level, you will also create a **nanoagent**: a minimal, executable Python agent that demonstrates the same concepts as the prompt samples but in working code. The nanoagent helps users understand how agents work under the hood.
+
+### Nanoagent Requirements
+- **Package Manager**: Use `uv` for dependency management
+- **LLM Provider**: Use `litellm` for provider-agnostic LLM calls (works with OpenAI, Azure, Anthropic, etc.)
+- **Async**: All agent code should be async (using `asyncio`)
+- **Mock Mode**: Include a `--mock` flag that runs without API keys for demo/testing purposes
+- **Minimal Dependencies**: Only `litellm`, `pydantic`, and standard library
+
+### Nanoagent Structure by Level
+
+**Level 1 - Basic Nanoagent:**
+```
+nanoagent/
+  pyproject.toml          # uv-managed, minimal deps
+  agent.py                # Single-file, one-shot agent (prompt → response)
+  README.md               # Setup and run instructions
+```
+
+**Level 2 - Intermediate Nanoagent:**
+```
+nanoagent/
+  pyproject.toml
+  agent.py                # Agent with tool calling + instruction loading
+  tools/
+    __init__.py
+    {{domain}}_tools.py   # Tool definitions with Pydantic schemas
+  instructions/
+    system.md             # System instructions loaded at runtime
+  README.md
+```
+
+**Level 3 - Advanced Nanoagent:**
+```
+nanoagent/
+  pyproject.toml
+  orchestrator.py         # Coordinator that manages agent handoffs
+  agents/
+    __init__.py
+    base.py               # Base agent class
+    planner.py            # Planning agent
+    implementer.py        # Implementation agent
+    tester.py             # Testing/validation agent
+  tools/
+    __init__.py
+    shared_tools.py       # Shared tool definitions
+  README.md
+```
+
+### Nanoagent Code Patterns
+
+Each nanoagent should demonstrate:
+- **Level 1**: Simple async prompt/response loop, basic error handling
+- **Level 2**: Tool definition with Pydantic, tool calling loop, instruction injection
+- **Level 3**: Agent base class, message passing between agents, orchestration loop, handoff protocol
+
+### Mock Mode Implementation
+The `--mock` flag should:
+- Return predefined responses instead of calling LLM
+- Simulate tool calls with sample outputs
+- Allow full workflow demonstration without API keys
+- Print what would be sent to the LLM for learning purposes
+
 For each level you will always write a `README.md` explaining the concept and task. the README.md should include:
 - An overview of the level's concept
 - The specific task the agent is to perform
@@ -110,6 +175,10 @@ You will Ask questions to clarify the requirements for each code sample:
       .github/
         prompts/
           {{short-name}}.prompt.md
+      nanoagent/
+        pyproject.toml
+        agent.py
+        README.md
     level-2-intermediate/
       README.md
       .github/
@@ -126,6 +195,15 @@ You will Ask questions to clarify the requirements for each code sample:
           security-validation/
             SKILL.md
         copilot-instructions.md
+      nanoagent/
+        pyproject.toml
+        agent.py
+        tools/
+          __init__.py
+          {{domain}}_tools.py
+        instructions/
+          system.md
+        README.md
     level-3-advanced/
       README.md
       .github/
@@ -151,6 +229,19 @@ You will Ask questions to clarify the requirements for each code sample:
             SKILL.md
             deploy-script.sh
         copilot-instructions.md
+      nanoagent/
+        pyproject.toml
+        orchestrator.py
+        agents/
+          __init__.py
+          base.py
+          planner.py
+          implementer.py
+          tester.py
+        tools/
+          __init__.py
+          shared_tools.py
+        README.md
 ```
 
 ## Apply Changes
