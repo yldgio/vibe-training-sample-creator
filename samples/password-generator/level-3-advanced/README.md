@@ -31,13 +31,23 @@ level-3-advanced/
 │   │   ├── agent-orchestration.instructions.md
 │   │   ├── performance-best-practices.instructions.md
 │   │   └── security-best-practices.instructions.md
-│   └── prompts/                          # Task prompts
-│       ├── architecture-decision.prompt.md
-│       ├── dynamic-planning.prompt.md
-│       ├── plan-execution.prompt.md
-│       ├── review-feedback.prompt.md
-│       ├── risk-assessment.prompt.md
-│       └── subagent-handover.prompt.md
+│   ├── prompts/                          # Task prompts
+│   │   ├── architecture-decision.prompt.md
+│   │   ├── dynamic-planning.prompt.md
+│   │   ├── plan-execution.prompt.md
+│   │   ├── review-feedback.prompt.md
+│   │   ├── risk-assessment.prompt.md
+│   │   └── subagent-handover.prompt.md
+│   └── skills/                           # Specialized workflows with resources
+│       ├── testing/
+│       │   ├── SKILL.md
+│       │   └── test-template.js
+│       ├── security-validation/
+│       │   ├── SKILL.md
+│       │   └── security-checklist.md
+│       └── deployment/
+│           ├── SKILL.md
+│           └── deploy-script.sh
 └── README.md
 ```
 
@@ -93,7 +103,36 @@ level-3-advanced/
 | Planning | Implicit | Minimal | Multi-stage |
 | Workflow | Linear | Sequential | Iterative |
 | Handoffs | None | None | Structured |
+| Skills | None | Simple | With resources |
 | Best For | Prototypes | Production | Complex projects |
+
+## Agent Skills
+
+Skills in Level 3 include additional resources (scripts, templates, examples) alongside instructions.
+
+### Skills in This Level
+
+| Skill | Resources | Purpose |
+|-------|-----------|---------|
+| `testing/` | `SKILL.md`, `test-template.js` | Comprehensive testing workflow with templates |
+| `security-validation/` | `SKILL.md`, `security-checklist.md` | Security audit with checklist |
+| `deployment/` | `SKILL.md`, `deploy-script.sh` | Deployment workflow with verification script |
+
+### Progressive Disclosure
+
+Skills use a three-level loading system:
+1. **Discovery**: Copilot reads skill `name` and `description` from frontmatter
+2. **Instructions**: When relevant, `SKILL.md` body is loaded into context
+3. **Resources**: Additional files (scripts, templates) loaded only when referenced
+
+### Skills vs Instructions
+
+| Use Skills When | Use Instructions When |
+|-----------------|----------------------|
+| Need scripts or templates | Just need coding guidelines |
+| Defining specialized workflows | Setting project standards |
+| Want cross-platform portability | Applying rules to file types |
+| Creating reusable capabilities | Defining language conventions |
 
 ## Learning Objectives
 
@@ -111,6 +150,13 @@ level-3-advanced/
 - Esempi community (prompts/instructions):
       - https://github.com/github/awesome-copilot/tree/main/prompts
       - https://github.com/github/awesome-copilot/tree/main/instructions
+- Agent Skills documentation:
+      - https://docs.github.com/en/copilot/concepts/agents/about-agent-skills
+      - https://code.visualstudio.com/docs/copilot/customization/agent-skills
+      - https://agentskills.io (open standard)
+- Esempi skills:
+      - https://github.com/anthropics/skills
+      - https://github.com/github/awesome-copilot
 
 ### Mini-cheatsheet: frontmatter (YAML)
 
@@ -140,4 +186,20 @@ applyTo: "**/*.js"
 description: "Ruolo dell’agente"
 tools: ["codebase", "editFiles"]
 ---
+```
+
+**Skill** (.github/skills/{skill-name}/SKILL.md)
+
+```yaml
+---
+name: skill-name-lowercase-hyphens
+description: "What the skill does and when Copilot should use it"
+license: MIT  # optional
+---
+
+# Instructions
+Step-by-step instructions, examples, and guidelines.
+
+## Resources
+Include scripts, templates, or examples in the same folder.
 ```

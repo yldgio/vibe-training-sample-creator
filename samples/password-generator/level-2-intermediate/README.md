@@ -28,12 +28,17 @@ level-2-intermediate/
 │   │   ├── performance-best-practices.instructions.md
 │   │   ├── security-best-practices.instructions.md
 │   │   └── testability-guidelines.instructions.md
-│   └── prompts/                          # Task-specific prompts
-│       ├── add-event-handlers.prompt.md
-│       ├── create-ui-component.prompt.md
-│       ├── create-unit-tests.prompt.md
-│       ├── generate-styles.prompt.md
-│       └── implement-password-logic.prompt.md
+│   ├── prompts/                          # Task-specific prompts
+│   │   ├── add-event-handlers.prompt.md
+│   │   ├── create-ui-component.prompt.md
+│   │   ├── create-unit-tests.prompt.md
+│   │   ├── generate-styles.prompt.md
+│   │   └── implement-password-logic.prompt.md
+│   └── skills/                           # Specialized workflows
+│       ├── testing/
+│       │   └── SKILL.md
+│       └── security-validation/
+│           └── SKILL.md
 └── README.md
 ```
 
@@ -85,8 +90,39 @@ Run these prompts in order:
 |--------|---------|----------------|---------|
 | Prompts | 1-2 general | 5+ specialized | Multi-agent |
 | Instructions | None/minimal | Domain-specific | Agent-specific |
+| Skills | None | Testing, Security | Testing, Security, Deployment |
 | Predictability | Low | High | High |
 | Best For | Prototypes | Production code | Complex projects |
+
+## Agent Skills
+
+Skills are specialized workflows that Copilot loads on-demand when relevant to your task.
+
+### Skills in This Level
+
+| Skill | Purpose |
+|-------|---------|
+| `testing/SKILL.md` | Password generator testing workflow |
+| `security-validation/SKILL.md` | Security validation for password handling |
+
+### Skills vs Instructions
+
+| Aspect | Skills | Instructions |
+|--------|--------|--------------|
+| **Loading** | On-demand (progressive disclosure) | Always or via glob patterns |
+| **Purpose** | Specialized workflows with resources | Coding standards/guidelines |
+| **Portability** | Cross-platform (VS Code, CLI, Coding Agent) | VS Code + GitHub.com |
+| **Content** | Instructions + scripts + examples | Instructions only |
+
+### When to Use Skills
+- Create reusable capabilities across AI tools
+- Include scripts, examples, or resources
+- Define specialized workflows (testing, deployment)
+
+### When to Use Instructions
+- Define project coding standards
+- Set language/framework conventions
+- Apply rules based on file types
 
 ## Learning Objectives
 
@@ -132,4 +168,17 @@ applyTo: "**/*.js"
 description: "Ruolo dell’agente"
 tools: ["codebase", "editFiles"]
 ---
+```
+
+**Skill** (.github/skills/{skill-name}/SKILL.md)
+
+```yaml
+---
+name: skill-name-lowercase-hyphens
+description: "What the skill does and when Copilot should use it"
+license: MIT  # optional
+---
+
+# Instructions
+Step-by-step instructions, examples, and guidelines.
 ```
