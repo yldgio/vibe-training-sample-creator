@@ -2,6 +2,8 @@
 
 This level showcases advanced prompting patterns for building a coordinated **multi-agent** workflow that plans, implements, and validates a secure password generator web app.
 
+> **📖 Complete Message Structure Guide**: For a detailed explanation of how message structure differs per agent and how handoffs work, see [MESSAGE-STRUCTURE-REFERENCE.md](../MESSAGE-STRUCTURE-REFERENCE.md)
+
 ## Concept: Multi-Agent Collaboration
 
 Instead of a single agent doing all the work, we orchestrate multiple specialized agents:
@@ -10,6 +12,289 @@ Instead of a single agent doing all the work, we orchestrate multiple specialize
 - **Implementer Agent**: Execution and coding (HOW)
 - **Tester Agent**: Validation and quality assurance (HOW WELL)
 - **Coordinator Agent**: Orchestration and handoffs
+
+## Prompt Anatomy: Multi-Agent Message Structure
+
+In Level 3, **each agent** gets its own specialized context. Understanding how messages flow between agents is critical.
+
+### Single Agent Request vs Multi-Agent Pipeline
+
+**Level 1-2 (Single Agent):**
+```mermaid
+flowchart LR
+    User --> Request[System + Developer + User Message] --> LLM --> Response
+```
+
+**Level 3 (Multi-Agent):**
+```mermaid
+flowchart TD
+    User --> Coordinator
+    
+    Coordinator --> P_Req[Planner Request]
+    P_Req --> P_Sys[System: Base + Planner Tools]
+    P_Req --> P_Dev[Developer: Planner Agent Definition]
+    P_Req --> P_User[User: Planning Task]
+    P_User --> Planner_LLM[LLM]
+    
+    Planner_LLM --> Plan[Plan Output]
+    
+    Plan --> I_Req[Implementer Request]
+    I_Req --> I_Sys[System: Base + Implementer Tools]
+    I_Req --> I_Dev[Developer: Implementer Agent + Plan Context]
+    I_Req --> I_User[User: Implementation Task]
+    I_User --> Implementer_LLM[LLM]
+    
+    Implementer_LLM --> Code[Implementation Output]
+    
+    Code --> T_Req[Tester Request]
+    T_Req --> T_Sys[System: Base + Tester Tools]
+    T_Req --> T_Dev[Developer: Tester Agent + Code Context]
+    T_Req --> T_User[User: Validation Task]
+    T_User --> Tester_LLM[LLM]
+    
+    Tester_LLM --> Result[Final Result]
+```
+
+### Message Structure Per Agent
+
+Each agent has a **customized message structure**:
+
+#### Planner Agent Request
+
+```mermaid
+flowchart TD
+    subgraph Planner LLM Request
+        direction TB
+        
+        subgraph SM[System Message - 4500 tokens]
+            SM1[Agent Role: Planning Expert]
+            SM2[Available Tools: codebase, semantic_search]
+            SM3[Workspace Context]
+        end
+        
+        subgraph DM[Developer Message - 2000 tokens]
+            DM1[planner.agent.md Definition: 800 tokens]
+            DM2[advanced-planning.instructions.md: 600 tokens]
+            DM3[agent-orchestration.instructions.md: 400 tokens]
+            DM4[Skill: security-validation metadata: 200 tokens]
+        end
+        
+        subgraph UM[User Message - 300 tokens]
+            UM1[From Coordinator:<br/>"Create password generator"<br/>+ User requirements]
+        end
+        
+        SM --> Total1[Total: ~6800 tokens]
+        DM --> Total1
+        UM --> Total1
+    end
+```
+
+**What makes Planner different:**
+- `tools: ["codebase", "semantic_search", "read_file"]` - Research tools only
+- Planner-specific instructions about architecture
+- No direct file editing capabilities
+
+#### Implementer Agent Request  
+
+```mermaid
+flowchart TD
+    subgraph Implementer LLM Request
+        direction TB
+        
+        subgraph SM[System Message - 5000 tokens]
+            SM1[Agent Role: Implementation Expert]
+            SM2[Available Tools: editFiles, codebase]
+            SM3[Workspace Context]
+        end
+        
+        subgraph DM[Developer Message - 3500 tokens]
+            DM1[implementer.agent.md Definition: 600 tokens]
+            DM2[security-best-practices.instructions.md: 500 tokens]
+            DM3[performance-best-practices.instructions.md: 500 tokens]
+            DM4[Full SKILL.md: testing/SKILL.md: 1200 tokens]
+            DM5[Planner's Output Plan: 700 tokens]
+        end
+        
+        subgraph UM[User Message - 400 tokens]
+            UM1[From Coordinator via Planner:<br/>"Implement according to plan"<br/>+ Plan details]
+        end
+        
+        SM --> Total2[Total: ~8900 tokens]
+        DM --> Total2
+        UM --> Total2
+    end
+```
+
+**What makes Implementer different:**
+- `tools: ["editFiles", "codebase"]` - Can modify files
+- Receives **Planner's output** in Developer Message (handoff context)
+- Full skill instructions loaded (not just metadata)
+
+#### Tester Agent Request
+
+```mermaid
+flowchart TD
+    subgraph Tester LLM Request
+        direction TB
+        
+        subgraph SM[System Message - 4800 tokens]
+            SM1[Agent Role: Quality Assurance Expert]
+            SM2[Available Tools: codebase, run_tests]
+            SM3[Workspace Context with Generated Files]
+        end
+        
+        subgraph DM[Developer Message - 4000 tokens]
+            DM1[tester.agent.md Definition: 700 tokens]
+            DM2[security-validation/SKILL.md: 1500 tokens]
+            DM3[testing/SKILL.md: 1200 tokens]
+            DM4[Planner's Plan: 300 tokens]
+            DM5[Implementer's Code Summary: 300 tokens]
+        end
+        
+        subgraph UM[User Message - 500 tokens]
+            UM1[From Coordinator:<br/>"Validate implementation"<br/>+ Success criteria]
+        end
+        
+        SM --> Total3[Total: ~9300 tokens]
+        DM --> Total3
+        UM --> Total3
+    end
+```
+
+**What makes Tester different:**
+- **Cannot edit files** - read-only tools
+- Receives context from **both previous agents**
+- Multiple full SKILLs loaded (security + testing)
+
+### Agent Handoff: Context Transfer
+
+When agents hand off, context flows through the **Developer Message**:
+
+```mermaid
+sequenceDiagram
+    participant Coordinator
+    participant Planner
+    participant Implementer
+    participant Tester
+
+    Coordinator->>Planner: User Message: "Create password generator"
+    
+    Note over Planner: LLM Request 1<br/>System: Planner tools<br/>Developer: planner.agent.md<br/>User: Task description
+    
+    Planner->>Planner: Generate architectural plan
+    
+    Planner->>Implementer: Handoff via Developer Message<br/>"Plan: [architectural decisions]"
+    
+    Note over Implementer: LLM Request 2<br/>System: Implementer tools<br/>Developer: implementer.agent.md + Plan<br/>User: "Implement this plan"
+    
+    Implementer->>Implementer: Generate code following plan
+    
+    Implementer->>Tester: Handoff via Developer Message<br/>"Code: [implementation summary]"
+    
+    Note over Tester: LLM Request 3<br/>System: Tester tools<br/>Developer: tester.agent.md + Plan + Code<br/>User: "Validate implementation"
+    
+    Tester->>Coordinator: Return: validation report
+```
+
+### Token Distribution Across Agents
+
+| Component | Planner | Implementer | Tester |
+|-----------|---------|-------------|--------|
+| **System Message** | 4,500 | 5,000 | 4,800 |
+| Agent Definition | 800 | 600 | 700 |
+| Instructions | 1,000 | 1,000 | 0 |
+| **Handoff Context** | **0** | **700 (Plan)** | **600 (Plan+Code)** |
+| Skills (full) | 0 | 1,200 | 2,700 |
+| **User Message** | 300 | 400 | 500 |
+| **TOTAL** | **~6,800** | **~8,900** | **~9,300** |
+
+**Key Insight**: Each subsequent agent request gets **larger** as context accumulates through handoffs.
+
+### Where Agent Definitions Go
+
+Agent `.agent.md` files are injected into the **Developer Message**:
+
+```yaml
+---
+description: "Planning agent for architecture decisions"
+tools: ["codebase", "semantic_search", "read_file"]
+handoff: ["implementer"]  # Can hand off to implementer
+---
+
+You are a planning specialist. Your role is to:
+1. Analyze requirements thoroughly
+2. Design architecture and data structures  
+3. Identify risks and constraints
+4. Create detailed implementation plan
+5. Hand off to implementer agent
+
+When complete, use the handoff mechanism to pass your plan.
+```
+
+**This entire file** (minus frontmatter) goes into the Developer Message for that agent.
+
+### Multi-Agent Token Budget
+
+**Total pipeline cost** (all three agents):
+```
+Planner Request:       6,800 tokens
+  + Planner Response:  1,500 tokens
+Implementer Request:   8,900 tokens  (includes Plan)
+  + Implementer Response: 3,000 tokens
+Tester Request:        9,300 tokens  (includes Plan + Code)
+  + Tester Response:   2,000 tokens
+────────────────────────────────────
+TOTAL PIPELINE:       31,500 tokens
+```
+
+**Comparison to Level 1:**
+- Level 1 single request: ~8,500 tokens
+- Level 3 pipeline: ~31,500 tokens (~3.7x)
+
+**Why it's worth it:**
+- Higher quality through specialization
+- Structured validation
+- Clear separation of concerns
+- Reproducible process
+
+### Practical Implications
+
+**Agent Tool Restrictions** shape the System Message:
+```yaml
+# planner.agent.md
+tools: ["codebase", "semantic_search"]  
+# → System Message includes only these tools
+# → Prevents planner from editing files
+
+# implementer.agent.md  
+tools: ["editFiles", "codebase"]
+# → System Message includes file editing
+# → Implementer can modify workspace
+```
+
+**Handoff Protocol** augments the Developer Message:
+```yaml
+# planner.agent.md
+handoff: ["implementer"]
+
+# When planner completes:
+# Coordinator extracts plan → Injects into implementer's Developer Message
+```
+
+**Skill Loading** is progressive:
+```yaml
+# Metadata always in Developer Message (200 tokens):
+- testing/SKILL.md: name + description
+
+# Full skill loaded when agent needs it (1200 tokens):
+- implementer uses testing skill → Full SKILL.md loaded
+- planner doesn't → Only metadata present
+```
+
+### Further Reading
+
+- For foundational message structure: [Level 1 README - Prompt Anatomy](../level-1-basic/README.md#prompt-anatomy-where-each-component-goes)
+- For instruction injection: [Level 2 README - Message Structure](../level-2-intermediate/README.md#prompt-anatomy-message-structure-in-level-2)
 
 ## The Task
 
@@ -157,6 +442,160 @@ Skills use a three-level loading system:
 - Esempi skills:
       - https://github.com/anthropics/skills
       - https://github.com/github/awesome-copilot
+
+## Quick Reference: Multi-Agent Message Structure
+
+### Message Structure Evolution
+
+```mermaid
+flowchart LR
+    subgraph Level1["Level 1: Single Agent"]
+        L1_Sys[System: 3K tokens]
+        L1_Dev[Developer: 0.2K tokens]
+        L1_User[User: 0.3K tokens]
+        L1_Total[Total: ~3.5K]
+    end
+    
+    subgraph Level2["Level 2: Instructed Agent"]
+        L2_Sys[System: 4K tokens]
+        L2_Dev[Developer: 3.5K tokens<br/>← Instructions!]
+        L2_User[User: 0.4K tokens]
+        L2_Total[Total: ~8K]
+    end
+    
+    subgraph Level3["Level 3: Multi-Agent Pipeline"]
+        L3_P[Planner: 6.8K tokens]
+        L3_I[Implementer: 8.9K tokens]
+        L3_T[Tester: 9.3K tokens]
+        L3_Total[Total: ~25K pipeline]
+    end
+    
+    Level1 -->|Add Instructions| Level2
+    Level2 -->|Add Agents| Level3
+```
+
+### Per-Agent Message Structure
+
+```mermaid
+flowchart TD
+    subgraph Planner["🧠 Planner Agent Request"]
+        direction TB
+        P_Sys["System: Base + Research Tools"]
+        P_Dev["Developer: planner.agent.md"]
+        P_User["User: Planning Task"]
+        P_Total["Total: ~6.8K tokens"]
+    end
+    
+    subgraph Implementer["⚙️ Implementer Agent Request"]
+        direction TB
+        I_Sys["System: Base + Edit Tools"]
+        I_Dev["Developer: implementer.agent.md<br/>+ PLAN from Planner"]
+        I_User["User: Implementation Task"]
+        I_Total["Total: ~8.9K tokens"]
+    end
+    
+    subgraph Tester["✅ Tester Agent Request"]
+        direction TB
+        T_Sys["System: Base + Read Tools"]
+        T_Dev["Developer: tester.agent.md<br/>+ PLAN + CODE"]
+        T_User["User: Validation Task"]
+        T_Total["Total: ~9.3K tokens"]
+    end
+    
+    Planner -->|Handoff| Implementer
+    Implementer -->|Handoff| Tester
+```
+
+### What You Control in Level 3
+
+| Message Type | Control Per Agent | How | Impact |
+|-------------|-------------------|-----|--------|
+| **System** | ⚠️ Partial | `tools` array in agent frontmatter | Tool availability per agent |
+| **Developer** | ✅ **Full** | **Agent-specific `.agent.md` files** | **Role specialization** |
+| **Developer** | ✅ Full | Instructions files | Standards enforcement |
+| **Developer** | ✅ Full | Skills (full SKILL.md) | Workflow definitions |
+| **Developer** | ⚠️ Automated | **Handoff context** | **Inter-agent communication** |
+| **User** | ✅ Full | Coordinator orchestration | Task routing |
+
+### Token Budget: Complete Pipeline
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ Context Window: 128,000 tokens (per request)                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ 1. Planner Request:                                            │
+│ ████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░         │
+│ 6,800 tokens + 1,500 response = 8,300 tokens                  │
+│                                                                 │
+│ 2. Implementer Request (includes Plan):                        │
+│ ████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░          │
+│ 8,900 tokens + 3,000 response = 11,900 tokens                 │
+│                                                                 │
+│ 3. Tester Request (includes Plan + Code):                      │
+│ ██████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░          │
+│ 9,300 tokens + 2,000 response = 11,300 tokens                 │
+│                                                                 │
+│ TOTAL PIPELINE: ~31,500 tokens (all agents combined)          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Handoff Context Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Coordinator
+    participant P as Planner LLM
+    participant I as Implementer LLM
+    participant T as Tester LLM
+
+    User->>Coordinator: "Create password generator"
+    
+    Note over Coordinator: Build Planner Request
+    
+    Coordinator->>P: System: Base + Research Tools<br/>Developer: planner.agent.md<br/>User: Task
+    
+    P->>Coordinator: Response: Architectural Plan
+    
+    Note over Coordinator: Extract Plan → Inject into Developer Message
+    
+    Coordinator->>I: System: Base + Edit Tools<br/>Developer: implementer.agent.md + PLAN ← Handoff<br/>User: "Implement plan"
+    
+    I->>Coordinator: Response: Generated Code
+    
+    Note over Coordinator: Extract Code Summary → Inject into Developer Message
+    
+    Coordinator->>T: System: Base + Read Tools<br/>Developer: tester.agent.md + PLAN + CODE ← Handoff<br/>User: "Validate"
+    
+    T->>Coordinator: Response: Validation Report
+    
+    Coordinator->>User: Final Result
+```
+
+### Agent-Specific Tool Restrictions
+
+```yaml
+# planner.agent.md
+tools: ["codebase", "semantic_search", "read_file"]
+# ✓ Can research
+# ✗ Cannot edit files
+
+# implementer.agent.md
+tools: ["editFiles", "codebase", "read_file"]
+# ✓ Can research
+# ✓ Can edit files
+# ✗ Cannot run tests
+
+# tester.agent.md
+tools: ["codebase", "read_file", "run_tests"]
+# ✓ Can research
+# ✓ Can run tests
+# ✗ Cannot edit files (read-only validation)
+```
+
+These tool restrictions appear in each agent's **System Message**, preventing inappropriate actions.
 
 ### Mini-cheatsheet: frontmatter (YAML)
 
