@@ -1,6 +1,7 @@
 ---
 agent: sampler
 description: update existing training samples to align with best practices and user requirements.
+model: Auto (copilot)
 ---
 
 ## User Input
