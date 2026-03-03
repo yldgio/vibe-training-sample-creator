@@ -14,12 +14,12 @@ Every request to an LLM consists of structured **messages**. GitHub Copilot cons
 
 ```mermaid
 flowchart TD
-    subgraph LLM Request
+    subgraph LLM_Request["LLM Request"]
         direction TB
-        A[System Message]
-        B[Developer Message]
-        C[User Message]
-        D[History Messages]
+        A["System Message"]
+        B["Developer Message"]
+        C["User Message"]
+        D["History Messages"]
         
         A --> E[LLM]
         B --> E
@@ -56,27 +56,27 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    subgraph System Message - 3000 tokens
-        S1[Built-in: Agent role, date, OS]
-        S2[copilot-instructions.md]
-        S3[Tool definitions filtered by prompt tools array]
-        S4[Workspace context]
+    subgraph SM_L1["System Message - 3000 tokens"]
+        S1["Built-in: Agent role, date, OS"]
+        S2["copilot-instructions.md"]
+        S3["Tool definitions filtered by prompt tools array"]
+        S4["Workspace context"]
     end
     
-    subgraph Developer Message - 200 tokens
-        D1[Minimal/empty in basic mode]
+    subgraph DM_L1["Developer Message - 200 tokens"]
+        D1["Minimal/empty in basic mode"]
     end
     
-    subgraph User Message - 300 tokens
-        U1[prompt.md BODY content]
-        U2[Everything after --- in .prompt.md]
-    end
+    subgraph UM_L1["User Message - 300 tokens"]
+        U1["prompt.md BODY content"]
+        U2["Everything after --- in .prompt.md"]
+    end 
+
+    SM_L1 --> LLM["LLM"]
+    DM_L1 --> LLM
+    UM_L1 --> LLM
     
-    System Message --> LLM[LLM]
-    Developer Message --> LLM
-    User Message --> LLM
-    
-    LLM --> Response
+    LLM --> Response["Response"]
 ```
 
 ### Example: password-generator.prompt.md
@@ -108,7 +108,7 @@ Use vanilla JavaScript, no frameworks.     # ← USER MESSAGE ends here
 
 ### File → Message Mapping
 
-```
+```text
 .github/
 ├── copilot-instructions.md                              → SYSTEM MESSAGE
 ├── instructions/
@@ -155,9 +155,9 @@ flowchart TD
         U1[create-ui-component.prompt.md BODY]
     end
     
-    System Message --> LLM[LLM]
-    Developer Message --> LLM
-    User Message --> LLM
+    SM_L1 --> LLM["LLM"]
+    DM_L1 --> LLM
+    UM_L1 --> LLM
     
     LLM --> Response[Response following ALL instructions]
 ```
@@ -229,29 +229,29 @@ description: "Comprehensive testing for web apps"  # ← DEVELOPER MESSAGE (alwa
 
 ```mermaid
 flowchart TD
-    subgraph System Message - 4500 tokens
-        S1[Built-in: Agent role, date, OS]
-        S2[copilot-instructions.md]
-        S3[Tools: ONLY codebase, semantic_search, read_file]
-        S4[Workspace context]
+    subgraph SM_P["System Message - 4500 tokens"]
+        S1["Built-in: Agent role, date, OS"]
+        S2["copilot-instructions.md"]
+        S3["Tools: ONLY codebase, semantic_search, read_file"]
+        S4["Workspace context"]
     end
     
-    subgraph Developer Message - 2000 tokens
-        D1[planner.agent.md BODY]
-        D2[advanced-planning.instructions.md BODY]
-        D3[agent-orchestration.instructions.md BODY]
-        D4[Skill metadata]
+    subgraph DM_P["Developer Message - 2000 tokens"]
+        D1["planner.agent.md BODY"]
+        D2["advanced-planning.instructions.md BODY"]
+        D3["agent-orchestration.instructions.md BODY"]
+        D4["Skill metadata"]
     end
     
-    subgraph User Message - 300 tokens
-        U1[From Coordinator: Plan this project]
+    subgraph UM_P["User Message - 300 tokens"]
+        U1["From Coordinator: Plan this project"]
     end
     
-    System Message --> LLM[LLM]
-    Developer Message --> LLM
-    User Message --> LLM
+    SM_P --> LLM["LLM"]
+    DM_P --> LLM
+    UM_P --> LLM
     
-    LLM --> Plan[Architectural Plan Output]
+    LLM --> Plan["Architectural Plan Output"]
 ```
 
 **Key:** `tools: ["codebase", "semantic_search", "read_file"]` in planner.agent.md frontmatter filters the System Message to **only** include these tools. Planner **cannot** edit files.
@@ -260,30 +260,30 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    subgraph System Message - 5000 tokens
-        S1[Built-in: Agent role, date, OS]
-        S2[copilot-instructions.md]
-        S3[Tools: ONLY editFiles, codebase, read_file]
-        S4[Workspace context]
+    subgraph SM_I["System Message - 5000 tokens"]
+        S1["Built-in: Agent role, date, OS"]
+        S2["copilot-instructions.md"]
+        S3["Tools: ONLY editFiles, codebase, read_file"]
+        S4["Workspace context"]
     end
     
-    subgraph Developer Message - 3500 tokens
-        D1[implementer.agent.md BODY]
-        D2[security-best-practices.instructions.md]
-        D3[performance-best-practices.instructions.md]
-        D4[Full SKILL.md: testing/SKILL.md - 1200 tokens]
-        D5[HANDOFF CONTEXT: Planner Plan - 700 tokens]
+    subgraph DM_I["Developer Message - 3500 tokens"]
+        D1["implementer.agent.md BODY"]
+        D2["security-best-practices.instructions.md"]
+        D3["performance-best-practices.instructions.md"]
+        D4["Full SKILL.md: testing/SKILL.md - 1200 tokens"]
+        D5["HANDOFF CONTEXT: Planner Plan - 700 tokens"]
     end
     
-    subgraph User Message - 400 tokens
-        U1[From Coordinator: Implement according to plan]
+    subgraph UM_I["User Message - 400 tokens"]
+        U1["From Coordinator: Implement according to plan"]
     end
     
-    System Message --> LLM[LLM]
-    Developer Message --> LLM
-    User Message --> LLM
+    SM_I --> LLM["LLM"]
+    DM_I --> LLM
+    UM_I --> LLM
     
-    LLM --> Code[Implementation Output]
+    LLM --> Code["Implementation Output"]
 ```
 
 **Key:** The **Planner's output** is injected into the Implementer's **Developer Message** as handoff context. This is how agents communicate.
@@ -292,30 +292,30 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    subgraph System Message - 4800 tokens
-        S1[Built-in: Agent role, date, OS]
-        S2[copilot-instructions.md]
-        S3[Tools: ONLY codebase, read_file, run_tests]
-        S4[Workspace context with generated files]
+    subgraph SM_T["System Message - 4800 tokens"]
+        S1["Built-in: Agent role, date, OS"]
+        S2["copilot-instructions.md"]
+        S3["Tools: ONLY codebase, read_file, run_tests"]
+        S4["Workspace context with generated files"]
     end
     
-    subgraph Developer Message - 4000 tokens
-        D1[tester.agent.md BODY]
-        D2[security-validation/SKILL.md - 1500 tokens]
-        D3[testing/SKILL.md - 1200 tokens]
-        D4[HANDOFF: Planner Plan - 300 tokens]
-        D5[HANDOFF: Implementer Code Summary - 300 tokens]
+    subgraph DM_T["Developer Message - 4000 tokens"]
+        D1["tester.agent.md BODY"]
+        D2["security-validation/SKILL.md - 1500 tokens"]
+        D3["testing/SKILL.md - 1200 tokens"]
+        D4["HANDOFF: Planner Plan - 300 tokens"]
+        D5["HANDOFF: Implementer Code Summary - 300 tokens"]
     end
     
-    subgraph User Message - 500 tokens
-        U1[From Coordinator: Validate implementation]
+    subgraph UM_T["User Message - 500 tokens"]
+        U1["From Coordinator: Validate implementation"]
     end
     
-    System Message --> LLM[LLM]
-    Developer Message --> LLM
-    User Message --> LLM
+    SM_T --> LLM["LLM"]
+    DM_T --> LLM
+    UM_T --> LLM
     
-    LLM --> Report[Validation Report]
+    LLM --> Report["Validation Report"]
 ```
 
 **Key:** The Tester receives context from **both** previous agents in its Developer Message.
@@ -448,49 +448,49 @@ TOTAL:               ~31,500 tokens
 
 ```mermaid
 flowchart TD
-    subgraph Sources
+    subgraph Sources["Sources"]
         direction LR
-        F1[copilot-instructions.md]
-        F2[*.instructions.md files]
-        F3[*.agent.md files]
-        F4[*/SKILL.md files]
-        F5[*.prompt.md files]
+        F1["copilot-instructions.md"]
+        F2["*.instructions.md files"]
+        F3["*.agent.md files"]
+        F4["*/SKILL.md files"]
+        F5["*.prompt.md files"]
     end
     
-    subgraph LLM Request
+    subgraph LLM_Req["LLM Request"]
         direction TB
         
-        subgraph SM[System Message]
-            SM1[Built-in Context]
-            SM2[Tool Definitions]
+        subgraph SM_Flow["System Message"]
+            SM1["Built-in Context"]
+            SM2["Tool Definitions"]
         end
         
-        subgraph DM[Developer Message]
-            DM1[Domain Instructions]
-            DM2[Agent definitions]
-            DM3[Skills]
-            DM4[Handoff Context]
+        subgraph DM_Flow["Developer Message"]
+            DM1["Domain Instructions"]
+            DM2["Agent definitions"]
+            DM3["Skills"]
+            DM4["Handoff Context"]
         end
         
-        subgraph UM[User Message]
-            UM1[Task Description]
+        subgraph UM_Flow["User Message"]
+            UM1["Task Description"]
         end
     end
     
     F1 --> SM2
     F2 --> DM1
     F3 --> DM2
-    F3 -->|tools: array| SM2
-    F4 -->|metadata| DM3
-    F4 -->|full body| DM3
-    F5 -->|tools: array| SM2
-    F5 -->|body| UM1
+    F3 -->|"tools: array"| SM2
+    F4 -->|"metadata"| DM3
+    F4 -->|"full body"| DM3
+    F5 -->|"tools: array"| SM2
+    F5 -->|"body"| UM1
     
-    SM --> LLM[LLM Processing]
-    DM --> LLM
-    UM --> LLM
+    SM_Flow --> LLM["LLM Processing"]
+    DM_Flow --> LLM
+    UM_Flow --> LLM
     
-    LLM --> Response[Generated Response]
+    LLM --> Response["Generated Response"]
 ```
 
 ---
